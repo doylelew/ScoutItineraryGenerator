@@ -101,7 +101,8 @@ class ScrollController(tk.Frame):
 
 		pass
 
-	def forget(self)
+	def forget(self):
+		pass
 
 class SubFrame(tk.Frame):
 
@@ -121,7 +122,7 @@ class SubFrame(tk.Frame):
 			self.__parent.addFrame(self)
 
 		if v_scroll or h_scroll:
-			
+			pass
 		else:
 			super().__init__(container)
 
