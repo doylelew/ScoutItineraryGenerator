@@ -79,34 +79,10 @@ class MainFrame(tk.Frame):
 	def getNumberFrames(self):
 		return len(self.__frames)
 
-class ScrollController(tk.Frame):
-	def __init__(self, container, controller):
-		self.__parent = container
-		self.__controller = controller
-
-		#attach to main frame
-		super().__init__(self.__parent)
-
-		#create a canvas
-		self.__canvas = tk.Canvas(self)
-
-		#create
-
-
-
-
-	def render(self):
-		self.grid(row=1, column=1)
-		self.__canvas.pack(side=tk.LEFT, fill=)
-
-		pass
-
-	def forget(self)
-
 
 class SubFrame(tk.Frame):
 
-	def __init__(self, container, fixed = False, controller= None, v_scroll=False, h_scroll=False):
+	def __init__(self, container, fixed = False, controller= None):
 
 		self.__parent = container
 		self.__frames = []
@@ -121,10 +97,7 @@ class SubFrame(tk.Frame):
 		else:
 			self.__parent.addFrame(self)
 
-		if v_scroll or h_scroll:
-			
-		else:
-			super().__init__(container)
+		super().__init__(container)
 
 	def render(self, row=1, column=1, columnspan=1, padx=0, pady=0):
 		self.grid(row=row, column=column, columnspan=columnspan, padx=padx, pady=pady)
