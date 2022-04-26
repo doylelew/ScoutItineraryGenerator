@@ -16,7 +16,7 @@ def main():
 	app = MainFrame(title="Scout Itinerary Generator")
 
 	#attach all frames to it in the order they are needed, the Navbuttons frame lets you track back and forth between each later frame
-	TestScroll(app)
+	TestScroll(app, v_scroll=True)
 
 
 	#begin the mainloop

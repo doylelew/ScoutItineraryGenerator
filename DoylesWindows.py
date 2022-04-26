@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 
 class ProgramWindow(tk.Tk):
 
@@ -81,27 +82,43 @@ class MainFrame(tk.Frame):
 
 #I intend to turn this class into a whole scroll feature callable with a single variable in the subframe
 class ScrollController(tk.Frame):
-	def __init__(self, container, controller):
+	def __init__(self, child, container, controller):
 		self.__parent = container
 		self.__controller = controller
+		self.__child = child
 
 		#attach to main frame
 		super().__init__(self.__parent)
+		self.__parent.addFrame(self)
 
 		#create a canvas
 		self.__canvas = tk.Canvas(self)
 
-		#create
-
-
+		#create scrollbar
+		self.__scrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.__canvas.yview)
 
 	def render(self):
+		#render all elements to the screen
 		self.grid(row=1, column=1)
-		self.__canvas.pack(side=tk.LEFT, fill=BOTH, expand=1)
+		self.__canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+		self.__testLabel = tk.Label(self.__parent, text = "Canvas rendered")
+		self.__testLabel.grid(row=0, column=0)
+		self.__scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+		self.__child.render()
 
-		pass
+
+		#configure the Canvas
+		self.__canvas.configure(yscrollcommand=self.__scrollbar.set)
+		self.__canvas.bind('<Configure>', lambda e: self.__canvas.configure(scrollregion= self.__canvas.bbox("all")))
+
+	def getCanvas(self):
+		return self.__canvas
 
 	def forget(self):
+		pass
+
+class Testsubframe(tk.Frame):
+	def __inti__(self):
 		pass
 
 class SubFrame(tk.Frame):
@@ -122,11 +139,13 @@ class SubFrame(tk.Frame):
 			self.__parent.addFrame(self)
 
 		if v_scroll or h_scroll:
-			pass
+			self.__scrollContainer = ScrollController(self, self.__parent, self.__controller).getCanvas()
+			super().__init__(self.__scrollContainer)
 		else:
 			super().__init__(container)
 
 	def render(self, row=1, column=1, columnspan=1, padx=0, pady=0):
+		print("ran subframe render")
 		self.grid(row=row, column=column, columnspan=columnspan, padx=padx, pady=pady)
 
 	def forget(self):
