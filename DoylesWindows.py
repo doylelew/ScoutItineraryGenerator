@@ -79,6 +79,7 @@ class MainFrame(tk.Frame):
 	def getNumberFrames(self):
 		return len(self.__frames)
 
+#I intend to turn this class into a whole scroll feature callable with a single variable in the subframe
 class ScrollController(tk.Frame):
 	def __init__(self, container, controller):
 		self.__parent = container
@@ -102,7 +103,6 @@ class ScrollController(tk.Frame):
 		pass
 
 	def forget(self)
-
 
 class SubFrame(tk.Frame):
 
