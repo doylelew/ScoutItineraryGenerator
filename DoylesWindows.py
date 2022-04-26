@@ -95,10 +95,9 @@ class ScrollController(tk.Frame):
 
 
 
-
 	def render(self):
 		self.grid(row=1, column=1)
-		self.__canvas.pack(side=tk.LEFT, fill=)
+		self.__canvas.pack(side=tk.LEFT, fill=BOTH, expand=1)
 
 		pass
 
