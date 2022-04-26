@@ -80,7 +80,7 @@ class MainFrame(tk.Frame):
 	def getNumberFrames(self):
 		return len(self.__frames)
 
-#I intend to turn this class into a whole scroll feature callable with a single variable in the subframe
+#this is the Scroallable Window Branch
 class ScrollController(tk.Frame):
 	def __init__(self, child, container, controller):
 		self.__parent = container
@@ -91,46 +91,38 @@ class ScrollController(tk.Frame):
 		super().__init__(self.__parent)
 		self.__parent.addFrame(self)
 
-		#create a canvas
+		# Create A Canvas
 		self.__canvas = tk.Canvas(self)
 
-		#create scrollbar
+		# Add A Scrollbar To The Canvas
 		self.__scrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.__canvas.yview)
 
+		# Configure The Canvas
+		# self.__canvas.configure(yscrollcommand=self.__scrollbar.set)
+		# self.__canvas.bind('<Configure>', lambda e: self.__canvas.configure(scrollregion = self.__canvas.bbox("all")))
+		
+
 	def render(self):
+
 		#render all elements to the screen
 		self.grid(row=1, column=1)
+		print("self render")
+
 		self.__canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
-		self.__testLabel = tk.Label(self.__parent, text = "Canvas rendered")
-		self.__testLabel.grid(row=0, column=0)
+		print("Canvas render")
+
 		self.__scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-		self.__child.render()
+		print("Scroll render")
 
-
-		#configure the Canvas
-		self.__canvas.configure(yscrollcommand=self.__scrollbar.set)
-		self.__canvas.bind('<Configure>', lambda e: self.__canvas.configure(scrollregion= self.__canvas.bbox("all")))
+		# self.__canvas.create_window((0,0), window=self.__child, anchor="nw")
+		# self.__child.render()
+		# print("Child render")
 
 	def getCanvas(self):
 		return self.__canvas
 
 	def forget(self):
 		pass
-
-class TestClass(tk.Frame):
-	def __init__(self, child, parent, controller):
-
-		self.__child= child
-		self.__parent = parent
-		self.__controller = controller
-		super().__init__(self.__parent)
-		self.__parent.addFrame(self)
-
-	def render (self):
-		self.__label = tk.Label(self, text="If you see this then it worked")
-		self.__label.grid(row=0, column=0)
-		self.__child.render()
-		self.grid(row=0, column=0)
 
 
 class SubFrame(tk.Frame):
@@ -140,17 +132,18 @@ class SubFrame(tk.Frame):
 		self.__parent = container
 		self.__frames = []
 
+
 		if controller == None:
 			self.__controller = container
 		else:
 			self.__controller = controller
 
-		
-
 		if v_scroll or h_scroll:
-			self.__scrollContainer = ScrollController(self, self.__parent, self.__controller)
+			self.__scrollable = True
+			self.__scrollContainer = ScrollController(self, self.__parent, self.__controller).getCanvas()
 			super().__init__(self.__scrollContainer)
 		else:
+			self.__scrollable = False
 			if fixed:
 				self.__parent.addPermaframe(self)
 			else:
@@ -158,8 +151,8 @@ class SubFrame(tk.Frame):
 			super().__init__(container)
 
 	def render(self, row=1, column=1, columnspan=1, padx=0, pady=0):
-		print("ran subframe render")
-		self.grid(row=row, column=column, columnspan=columnspan, padx=padx, pady=pady)
+		if self.__scrollable:
+			self.grid(row=row, column=column, columnspan=columnspan, padx=padx, pady=pady)
 
 	def forget(self):
 		self.grid_forget()
