@@ -117,9 +117,21 @@ class ScrollController(tk.Frame):
 	def forget(self):
 		pass
 
-class Testsubframe(tk.Frame):
-	def __inti__(self):
-		pass
+class TestClass(tk.Frame):
+	def __init__(self, child, parent, controller):
+
+		self.__child= child
+		self.__parent = parent
+		self.__controller = controller
+		super().__init__(self.__parent)
+		self.__parent.addFrame(self)
+
+	def render (self):
+		self.__label = tk.Label(self, text="If you see this then it worked")
+		self.__label.grid(row=0, column=0)
+		self.__child.render()
+		self.grid(row=0, column=0)
+
 
 class SubFrame(tk.Frame):
 
@@ -133,15 +145,16 @@ class SubFrame(tk.Frame):
 		else:
 			self.__controller = controller
 
-		if fixed:
-			self.__parent.addPermaframe(self)
-		else:
-			self.__parent.addFrame(self)
+		
 
 		if v_scroll or h_scroll:
-			self.__scrollContainer = ScrollController(self, self.__parent, self.__controller).getCanvas()
+			self.__scrollContainer = ScrollController(self, self.__parent, self.__controller)
 			super().__init__(self.__scrollContainer)
 		else:
+			if fixed:
+				self.__parent.addPermaframe(self)
+			else:
+				self.__parent.addFrame(self)
 			super().__init__(container)
 
 	def render(self, row=1, column=1, columnspan=1, padx=0, pady=0):
