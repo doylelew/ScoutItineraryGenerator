@@ -1,8 +1,8 @@
-from DoylesWindows import *
+from Dkinter import *
 import tkinter as tk
 from tkinter import ttk
 
-class TestScroll(SubFrame):
+class TestScroll(ScrollableSubFrame):
 
 	def render(self):
 
