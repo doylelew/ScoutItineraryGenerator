@@ -65,52 +65,55 @@ class MainFrame(tk.Frame):
 	def getNumberFrames(self):
 		return len(self.__frames)
 
-#this is the Scroallable Window Branch
-# class ScrollController(tk.Frame):
-# 	def __init__(self, child, container, controller):
-# 		self.__parent = container
-# 		self.__controller = controller
-# 		self.__child = child
-
-# 		#attach to main frame
-# 		super().__init__(self.__parent)
-# 		self.__parent.addFrame(self)
-
-# 		# Create A Canvas
-# 		self.__canvas = tk.Canvas(self)
-
-# 		# Add A Scrollbar To The Canvas
-# 		self.__scrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.__canvas.yview)
-
-# 		# Configure The Canvas
-# 		# self.__canvas.configure(yscrollcommand=self.__scrollbar.set)
-# 		# self.__canvas.bind('<Configure>', lambda e: self.__canvas.configure(scrollregion = self.__canvas.bbox("all")))
-		
-
-# 	def render(self):
-
-# 		#render all elements to the screen
-# 		self.grid(row=1, column=1)
-# 		print("self render")
-
-# 		self.__canvas.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
-# 		print("Canvas render")
-
-# 		self.__scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
-# 		print("Scroll render")
-
-# 		# self.__canvas.create_window((0,0), window=self.__child, anchor="nw")
-# 		# self.__child.render()
-# 		# print("Child render")
-
-# 	def getCanvas(self):
-# 		return self.__canvas
-
-# 	def forget(self):
-# 		pass
-
 
 class SubFrame(DkFrame):
+
+	def __init__(self, container, controller=None, fixed = False):
+
+		self.__parent = container
+		self.__frames = []
+
+		if controller == None:
+			self.__controller = container
+		else:
+			self.__controller = controller
+
+		if fixed:
+			self.__parent.addPermaframe(self)
+		else:
+			self.__parent.addFrame(self)
+
+		super().__init__(container)
+
+
+
+class ScrollableSubFrame(DkFrame):
+
+	def __init__(self, container, controller=None, canvas=None, fixed = False):
+
+		self.__parent = container
+		self.__frames = []
+
+		if controller == None:
+			self.__controller = container
+		else:
+			self.__controller = controller
+
+		if fixed:
+			self.__parent.addPermaframe(self)
+		else:
+			self.__parent.addFrame(self)
+
+		if canvas == None:
+			super().__init__(container)
+		else:
+			super().__init__(canvas)
+
+	def render(self, row=1, column=1, columnspan=1, padx=0, pady=0):
+		self.grid(row=row, column=column, columnspan=columnspan, padx=padx, pady=pady)
+
+	def forget(self):
+		self.grid_forget()
 
 	def resize(self, width, height,):
 		self.__controller.resize(width+100, height+100)
@@ -132,27 +135,6 @@ class SubFrame(DkFrame):
 
 	def getParentLayer(self):
 		return self.__parent
-
-
-class ScrollableSubFrame(SubFrame):
-	def __init__(self, container, controller=None, v_scroll=False, h_scroll=False):
-		super().__init__(container, controller)
-		self.__parent = container
-		self.__controller = controller
-
-		#Create A Canvas
-		self.__canvas = tk.Canvas(self)
-
-		# Add A Scrollbar To The Canvas
-		self.__scrollbar = ttk.Scrollbar(self, orient=tk.VERTICAL, command=self.__canvas.yview)
-		self.__child_frame = ScrollChildFrame(self, self.__controller, self.__canvas)
-
-	def addFrame(self, frame):
-		self.__child = frame
-
-	def render(self):
-		print("noice!")
-		pass
 
 
 

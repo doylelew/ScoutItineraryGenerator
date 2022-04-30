@@ -21,16 +21,8 @@ class DkFrame(Frame):
 
 		self.__parent = container
 		self.__frames = []
+		self.__controller =None
 
-		if controller == None:
-			self.__controller = container
-		else:
-			self.__controller = controller
-
-		if fixed:
-			self.__parent.addPermaframe(self)
-		else:
-			self.__parent.addFrame(self)
 		super().__init__(container)
 
 	def render(self, row=1, column=1, columnspan=1, padx=0, pady=0):
@@ -39,13 +31,24 @@ class DkFrame(Frame):
 	def forget(self):
 		self.grid_forget()
 
-class ScrollChildFrame(Frame):
+	def resize(self, width, height):
+		self.__controller.resize(width+100, height+100)
 
-	def __init__(self, container, controller, canvas):
-		self.__parent = container
-		self.__controller = controller
-		self.__canvas = canvas
+	def getValue(self, key):
+		return self.__controller.getValue(key)
 
-		self.__parent.addFrame(self)
-	
+	def storeData(self, key, value):
+		self.__controller.storeData(key, value)
+
+	def getControlLayer(self):
+		return self.__controller
+
+	def addFrame(self, frame):
+		self.__frames.append(frame)
+
+	def getFrames(self):
+		return self.__frames
+
+	def getParentLayer(self):
+		return self.__parent
 
