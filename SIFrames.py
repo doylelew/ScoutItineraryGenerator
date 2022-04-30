@@ -5,7 +5,7 @@ from tkinter import filedialog as fd
 
 
 #custom Library imports
-from DoylesWindows import *
+from Dkinter import *
 from SIExcelObj import ExcelObject
 
 

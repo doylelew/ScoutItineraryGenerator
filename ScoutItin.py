@@ -1,4 +1,4 @@
-from DoylesWindows import *
+from Dkinter import *
 from SIFrames import *
 
 def main():
