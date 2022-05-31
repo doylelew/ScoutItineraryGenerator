@@ -15,7 +15,6 @@ class ProgramWindow(tk.Tk):
 
 		self.geometry(f'{width}x{height}+{center_x}+{center_y}')
 
-
 class MainFrame(tk.Frame):
 
 	def __init__(self, title="New Window", width=400, height=400, icon = None):
@@ -78,7 +77,6 @@ class MainFrame(tk.Frame):
 
 	def getNumberFrames(self):
 		return len(self.__frames)
-
 
 class SubFrame(tk.Frame):
 

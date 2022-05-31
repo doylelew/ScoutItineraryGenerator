@@ -3,7 +3,6 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from tkinter import filedialog as fd
 
-
 #custom Library imports
 from Dkinter import *
 from SIExcelObj import ExcelObject
@@ -93,19 +92,19 @@ class OpenFileScreen(SubFrame):
 		super().forget()
 
 	def select_file(self):
-		    filetypes = (
+		filetypes = (
 		        ('text files', '*.xlsx'),
 		        ('All files', '*.*')
 		    )
 
-		    filename = fd.askopenfilename(
+		filename = fd.askopenfilename(
 		        title='Open a file',
 		        initialdir='.',
 		        filetypes=filetypes)
 
-		    self.filestr = filename
-		    self.keyword.delete(0, tk.END)
-		    self.keyword.insert(0, self.filestr)
+		self.filestr = filename
+		self.keyword.delete(0, tk.END)
+		self.keyword.insert(0, self.filestr)
 
 #Each block of location data in list locations screen
 class LocationUnit(SubFrame):
@@ -271,7 +270,6 @@ class ListLocationsScreen(SubFrame):
 	def destroyLocationBoxs(self):
 		for frame in self.getFrames():
 			frame.forget()
-
 
 #frame used for testing that a value was stored
 class LabelScreen(SubFrame):
