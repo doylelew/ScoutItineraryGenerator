@@ -2,9 +2,10 @@ import tkinter as tk
 from tkinter import ttk
 from Dkinter_subclass import *
 
+
 class MainFrame(tk.Frame):
 
-	def __init__(self, title="New Window", width=400, height=400, icon = None):
+	def __init__(self, title="New Window", width=400, height=400, icon=None):
 		if icon == None:
 			self._parent = ProgramWindow(title, width, height)
 		super().__init__(self._parent)
@@ -32,11 +33,11 @@ class MainFrame(tk.Frame):
 
 	def resize(self, width, height):
 		self._parent.resize(width, height)
-		self.width= width
-		self.height= height
+		self.width = width
+		self.height = height
 
 	def getsize(self):
-		return(self._width, self._height)
+		return (self._width, self._height)
 
 	def getValue(self, key):
 		if key in self._data.keys():
@@ -44,7 +45,7 @@ class MainFrame(tk.Frame):
 		return None
 
 	def storeData(self, key, value):
-		self._data[key]= value
+		self._data[key] = value
 
 	def addFrame(self, frame):
 		self._frames.append(frame)
@@ -68,7 +69,7 @@ class MainFrame(tk.Frame):
 
 class SubFrame(DkFrame):
 
-	def __init__(self, container, controller=None, fixed = False):
+	def __init__(self, container, controller=None, fixed=False):
 
 		self._parent = container
 		self._frames = []
@@ -88,7 +89,7 @@ class SubFrame(DkFrame):
 
 class ScrollableSubFrame(DkFrame):
 
-	def __init__(self, container, controller=None, canvas=None, fixed = False):
+	def __init__(self, container, controller=None, fixed=False):
 
 		self._parent = container
 		self._frames = []
@@ -103,42 +104,20 @@ class ScrollableSubFrame(DkFrame):
 		else:
 			self._parent.addFrame(self)
 
-		if canvas == None:
-			super().__init__(container)
-		else:
-			super().__init__(canvas)
+		self._grid_frame = DkFrame(container)
+		self._canvas_layer = tk.Canvas(self._grid_frame)
+		self._scrollbar = ttk.Scrollbar(self._grid_frame, orient=tk.VERTICAL, command=self._canvas_layer.yview)
+
+		self._canvas_layer.configure(yscrollcommand=self._scrollbar.set)
+		self._canvas_layer.bind('<Configure>', lambda e: self._canvas_layer.configure(scrollregion= self._canvas_layer.bbox("all")))
+
+		super().__init__(self._canvas_layer)
 
 	def render(self, row=1, column=1, columnspan=1, padx=0, pady=0):
-		self.grid(row=row, column=column, columnspan=columnspan, padx=padx, pady=pady)
+		self._grid_frame.grid(row=row, column=column, columnspan=columnspan, padx=padx, pady=pady)
+		self._canvas_layer.pack(side=tk.LEFT, fill=tk.BOTH, expand=1)
+		self._scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+		self._canvas_layer.create_window((0, 0), window= self, anchor="nw")
 
 	def forget(self):
 		self.grid_forget()
-
-	def resize(self, width, height,):
-		self._controller.resize(width+100, height+100)
-
-	def getValue(self, key):
-		return self._controller.getValue(key)
-
-	def storeData(self, key, value):
-		self._controller.storeData(key, value)
-
-	def getControlLayer(self):
-		return self._controller
-
-	def addFrame(self, frame):
-		self._frames.append(frame)
-
-	def getFrames(self):
-		return self._frames
-
-	def getParentLayer(self):
-		return self._parent
-
-
-
-
-
-
-
-
