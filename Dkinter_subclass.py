@@ -32,23 +32,23 @@ class DkFrame(Frame):
 		self.grid_forget()
 
 	def resize(self, width, height):
-		self.__controller.resize(width+100, height+100)
+		self._controller.resize(width+100, height+100)
 
 	def getValue(self, key):
-		return self.__controller.getValue(key)
+		return self._controller.getValue(key)
 
 	def storeData(self, key, value):
-		self.__controller.storeData(key, value)
+		self._controller.storeData(key, value)
 
 	def getControlLayer(self):
-		return self.__controller
+		return self._controller
 
 	def addFrame(self, frame):
-		self.__frames.append(frame)
+		self._frames.append(frame)
 
 	def getFrames(self):
-		return self.__frames
+		return self._frames
 
 	def getParentLayer(self):
-		return self.__parent
+		return self._parent
 

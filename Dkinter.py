@@ -6,103 +6,102 @@ class MainFrame(tk.Frame):
 
 	def __init__(self, title="New Window", width=400, height=400, icon = None):
 		if icon == None:
-			self.__parent = ProgramWindow(title, width, height)
-		super().__init__(self.__parent)
-		self.__width = width
-		self.__height = height
+			self._parent = ProgramWindow(title, width, height)
+		super().__init__(self._parent)
+		self._width = width
+		self._height = height
 		if icon:
-			self.__parent.iconbitmap(icon)
-		self.__data = {}
-		self.__frames = []
-		self.__frame_index = None
-		self.__permaframes = []
+			self._parent.iconbitmap(icon)
+		self._data = {}
+		self._frames = []
+		self._frame_index = None
+		self._permaframes = []
 
-		self.__parent.resize(width, height)
+		self._parent.resize(width, height)
 
 	def start(self):
 		self.pack()
 
-		for permaframe in self.__permaframes:
+		for permaframe in self._permaframes:
 			permaframe.render()
 
-		if len(self.__frames) > 0:
+		if len(self._frames) > 0:
 			self.renderFrame(0)
 
-		self.__parent.mainloop()
+		self._parent.mainloop()
 
 	def resize(self, width, height):
-		self.__parent.resize(width, height)
+		self._parent.resize(width, height)
 		self.width= width
 		self.height= height
 
 	def getsize(self):
-		return(self.__width, self.__height)
+		return(self._width, self._height)
 
 	def getValue(self, key):
-		if key in self.__data.keys():
-			return self.__data[key]
+		if key in self._data.keys():
+			return self._data[key]
 		return None
 
 	def storeData(self, key, value):
-		self.__data[key]= value
+		self._data[key]= value
 
 	def addFrame(self, frame):
-		self.__frames.append(frame)
+		self._frames.append(frame)
 
 	def addPermaframe(self, frame):
-		self.__permaframes.append(frame)
+		self._permaframes.append(frame)
 
 	def forgetFrame(self):
-		self.__frames[self.__frame_index].forget()
+		self._frames[self._frame_index].forget()
 
 	def renderFrame(self, index):
-		self.__frames[index].render()
-		self.__frame_index = index
+		self._frames[index].render()
+		self._frame_index = index
 
 	def getFrameIndex(self):
-		return self.__frame_index
+		return self._frame_index
 
 	def getNumberFrames(self):
-		return len(self.__frames)
+		return len(self._frames)
 
 
 class SubFrame(DkFrame):
 
 	def __init__(self, container, controller=None, fixed = False):
 
-		self.__parent = container
-		self.__frames = []
+		self._parent = container
+		self._frames = []
 
 		if controller == None:
-			self.__controller = container
+			self._controller = container
 		else:
-			self.__controller = controller
+			self._controller = controller
 
 		if fixed:
-			self.__parent.addPermaframe(self)
+			self._parent.addPermaframe(self)
 		else:
-			self.__parent.addFrame(self)
+			self._parent.addFrame(self)
 
 		super().__init__(container)
-
 
 
 class ScrollableSubFrame(DkFrame):
 
 	def __init__(self, container, controller=None, canvas=None, fixed = False):
 
-		self.__parent = container
-		self.__frames = []
+		self._parent = container
+		self._frames = []
 
 		if controller == None:
-			self.__controller = container
+			self._controller = container
 		else:
-			self.__controller = controller
+			self._controller = controller
 
 		if fixed:
-			self.__parent.addPermaframe(self)
+			self._parent.addPermaframe(self)
 		else:
-			self.__parent.addFrame(self)
+			self._parent.addFrame(self)
 
 		if canvas == None:
 			super().__init__(container)
@@ -116,25 +115,25 @@ class ScrollableSubFrame(DkFrame):
 		self.grid_forget()
 
 	def resize(self, width, height,):
-		self.__controller.resize(width+100, height+100)
+		self._controller.resize(width+100, height+100)
 
 	def getValue(self, key):
-		return self.__controller.getValue(key)
+		return self._controller.getValue(key)
 
 	def storeData(self, key, value):
-		self.__controller.storeData(key, value)
+		self._controller.storeData(key, value)
 
 	def getControlLayer(self):
-		return self.__controller
+		return self._controller
 
 	def addFrame(self, frame):
-		self.__frames.append(frame)
+		self._frames.append(frame)
 
 	def getFrames(self):
-		return self.__frames
+		return self._frames
 
 	def getParentLayer(self):
-		return self.__parent
+		return self._parent
 
 
 
