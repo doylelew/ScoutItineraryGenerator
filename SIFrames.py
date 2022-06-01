@@ -108,14 +108,26 @@ class OpenFileScreen(SubFrame):
         self.keyword.delete(0, tk.END)
         self.keyword.insert(0, self.filestr)
 
+# canvas for displaying the location subunits in the Location List Screen
+class LocationSelectingCanvas(ScrollableSubFrame):
+
+    def render(self, row_start):
+        for frame in self.getFrames():
+            frame.render()
+        super().render(row=row_start)
+
+    def forget(self):
+        for frame in self.getFrames():
+            frame.forget()
+
 
 # Each block of location data in list locations screen
 class LocationUnit(SubFrame):
 
-    def __init__(self, container, index, row_index, controller):
-        self.index = index
-        self.row_index = row_index
-        super().__init__(container, controller=controller)
+    def __init__(self, container, controller, choice_list):
+        self.choice_list = choice_list
+        super().__init__(container, controller= controller )
+
 
     def render(self):
         self.full_time_frame = ttk.LabelFrame(self, text="Start and End Times")
@@ -140,7 +152,7 @@ class LocationUnit(SubFrame):
         self.end_time_entry = ttk.Entry(self.sub_time_frame, textvariable=self.end_time, width=10)
         self.end_time_entry.grid(row=1, column=0)
 
-        self.location_choices = self.getControlLayer().getValue('column choice')
+        self.location_choices = self.choice_list
         self.location_choice = tk.StringVar()
         self.choose_location = tk.OptionMenu(self, self.location_choice, *self.location_choices)
         self.choose_location.grid(row=0, column=1)
@@ -148,8 +160,16 @@ class LocationUnit(SubFrame):
         self.horizontal_seperator = ttk.Separator(self, orient='horizontal')
         self.horizontal_seperator.grid(row=1, column=0, columnspan=2, sticky="ew", pady=5, )
 
-        # place under the last row the parent screen has saved sequentially
-        super().render(row=self.index + self.row_index)
+        # creat cleaning list
+        self.cleaning_list = [self.horizontal_seperator, self.choose_location, self.end_time_entry, self.start_time_entry, self.sub_time_frame, self.overide_checkbox, self.Checkbox_label, self.full_time_frame]
+
+        # render frame
+        self.pack()
+
+    def forget(self):
+        for item in self.cleaning_list:
+            item.grid_forget()
+        super().forget()
 
 
 # allows user to pick the locations they will want to write to a file, including order, times and so forth
@@ -161,7 +181,7 @@ class ListLocationsScreen(SubFrame):
         self.excel_file = ExcelObject(self.getControlLayer().getValue('excel file'))
         self.cleaner = []
         self.rows = 4
-        self.location_index = 0
+        self.options_rendered = False
 
         # frame renders information only id the file successfully opens in pandas
         if self.excel_file.dataframeIsValid():
@@ -233,7 +253,7 @@ class ListLocationsScreen(SubFrame):
         self.destroyLocationBoxs()
 
         # clears attached frames
-        self.__frames = []
+        self.clearFrames()
 
         super().forget()
 
@@ -253,30 +273,30 @@ class ListLocationsScreen(SubFrame):
                                  "You entered a non-number value for'Minutes per loation'\nPlease enter a number value for the feild\ne.g '5', '10', '37', etc.")
             return
 
+        # destroys the boxes created on last submit
+        if self.options_rendered:
+            self.selection_boxes_canvas.forget()
+
         # submit data to control frame
-        self.destroyLocationBoxs()
         self.getControlLayer().storeData("column choice", self.excel_file.getEachForColumn(self.column_choice.get()))
         self.getControlLayer().storeData("number of locations", int(self.number_of_locations.get()))
         self.getControlLayer().storeData("minutes per", int(self.minutes_per.get()))
-        print(
-            f"{self.getControlLayer().getValue('column choice')}, {int(self.number_of_locations.get())}, {int(self.minutes_per.get())}")
 
-        # sumbit draw the new frames
+        # creates a scrollable frame
+        self.resize(800, 600)
+        self.selection_boxes_canvas = LocationSelectingCanvas(self.getParentLayer(), controller=self.getControlLayer())
+        self.selection_boxes_canvas.render(4) # to-do figure out why the child boxes are not rendering
+        self.options_rendered = True
+
+
+        # submit draw the new frames
+        self.loc_nums = self.getControlLayer().getValue("number of locations")
+        self.choice_list = self.getControlLayer().getValue("column choice")
         i = 0
-        while i < self.getControlLayer().getValue("number of locations"):
-            self.createLocationBox(self.location_index, self.rows)
+        while i < self.loc_nums:
+            LocationUnit(self.getParentLayer(), self.getControlLayer(), self.choice_list)
             i += 1
 
-        self.resize(800, 600)
-
-    def createLocationBox(self, index, row_index):
-        frame = LocationUnit(self, self.location_index, self.rows, self.getControlLayer())
-        frame.render()
-        self.location_index += 1
-
-    def destroyLocationBoxs(self):
-        for frame in self.getFrames():
-            frame.forget()
 
 
 # frame used for testing that a value was stored

@@ -6,6 +6,7 @@ from tkinter import ttk
 class TestScroll(ScrollableSubFrame):
 
     def render(self):
+        self.resize(600, 600)
         for index in range(100):
             ttk.Button(self, text=f"This is button {index}").pack()
 

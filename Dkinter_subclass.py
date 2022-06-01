@@ -17,11 +17,10 @@ class ProgramWindow(Tk):
 
 class DkFrame(Frame):
 
-	def __init__(self, container, controller=None, fixed = False):
+	def __init__(self, container, fixed = False):
 
-		self.__parent = container
-		self.__frames = []
-		self.__controller =None
+		self._parent = container
+		self._frames = []
 
 		super().__init__(container)
 
@@ -49,6 +48,10 @@ class DkFrame(Frame):
 	def getFrames(self):
 		return self._frames
 
+	def clearFrames(self):
+		self._frames = []
+
 	def getParentLayer(self):
 		return self._parent
+
 
